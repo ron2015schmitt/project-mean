@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
 
 @Component({
   selector: 'app-post-list',
@@ -7,10 +7,10 @@ import { Component } from "@angular/core";
 })
 
 export class PostListComponent {
-  posts = [
-    { title: 'hello', content: 'This is the hello message.'},
-    { title: "what's up?", content: 'How is everyone?'},
-    { title: 'looking for an apartment', content: 'I need an apartment in Brooklyn, NY.'},
-  ];
+  @Input() posts = [];
+
+  onPostAdded(post) {
+    this.posts.push(post);
+  }
 }
 
