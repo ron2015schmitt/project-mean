@@ -39,5 +39,7 @@ testem.log
 Thumbs.db
 
 
+
 # word backup files
 ~$*.docx
+*.tmp
