@@ -7,5 +7,10 @@ import { Component } from "@angular/core";
 })
 
 export class PostListComponent {
+  posts = [
+    { title: 'hello', content: 'This is the hello message.'},
+    { title: "what's up?", content: 'How is everyone?'},
+    { title: 'looking for an apartment', content: 'I need an apartment in Brooklyn, NY.'},
+  ];
 }
 
