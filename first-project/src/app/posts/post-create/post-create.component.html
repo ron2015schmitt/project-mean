@@ -1,15 +1,17 @@
 <mat-card>
-  <section>
-    <mat-form-field>
-      <input matInput type="text" [(ngModel)]="enteredTitle">
-    </mat-form-field>
-    <mat-form-field>
-      <textarea matInput rows="6" [(ngModel)]="enteredContent"></textarea>
-    </mat-form-field>
-  </section>
-  <mat-divider></mat-divider>
-  <section>
-    <button color='accent' mat-raised-button (click)="onAddPost()">Save Button</button>
-  </section>
+  <form (submit)="onAddPost(postForm)" #postForm="ngForm">
+    <section>
+      <mat-form-field>
+        <input matInput type="text" name="title" ngModel required minlength="3" #title="ngModel">
+        <mat-error *ngIf="title.invalid">Please enter a title (of 3 characters or more) for your post.</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <textarea matInput rows="6" name="content" ngModel required></textarea>
+      </mat-form-field>
+    </section>
+    <mat-divider></mat-divider>
+    <section>
+      <button color='accent' mat-raised-button type="submit">Save Button</button>
+    </section>
+  </form>
 </mat-card>
-
