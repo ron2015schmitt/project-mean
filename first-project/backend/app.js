@@ -16,7 +16,8 @@ app.use('/api/posts', (req, res, next) => {
     },
   ];
   // send status, then send posts as a JSON message!
-  res.status(200).json({
+  res.status(200);
+  res.json({
     message: 'Posts fetched successfully!',
     posts
   });
