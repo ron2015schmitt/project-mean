@@ -1,9 +1,14 @@
 console.log('My First App Node Server Started');
 
 const http = require('http');
-const server = http.createServer( (req, res) => {
-  res.end('This my first response');
-} );
 
-server.listen( process.env.PORT || 3000 );
+// get our ExpressJS application
+const app = require('./backend/app');
+// set the port number
+const port = process.env.PORT || 3000;
+app.set('port', port);
+
+// create and start the Node server using the Express app
+const server = http.createServer(app);
+server.listen(port);
 
