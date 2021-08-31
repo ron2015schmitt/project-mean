@@ -1,11 +1,14 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
+
+app.use(bodyParser.json());
 
 // give permissions for the front-end to access
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
-    "Access-Control-Allow-Header",
+    "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
   res.setHeader(
@@ -15,21 +18,32 @@ app.use((req, res, next) => {
   next();
 });
 
+// use hard-coded "database" for now
+let posts = [
+  {
+    id: "fa12823",
+    title: "First Server-side post",
+    content: "This is coming from the server!",
+  },
+  {
+    id: "rs23981",
+    title: "Second Server-side post",
+    content: "This is also coming from the server!",
+  },
+];
+
+app.post('/api/posts', (req, res, next) => {
+  let post = req.body;
+  posts.push(post);
+  console.log(`post received`,post);
+  res.status(201).json({
+    message: 'New post added successfully',
+  });
+});
+
 // get the posts database
 app.use('/api/posts', (req, res, next) => {
   // use hard-coded "database" for now
-  const posts = [
-    {
-      id: "fa12823",
-      title: "First Server-side post",
-      content: "This is coming from the server!",
-    },
-    {
-      id: "rs23981",
-      title: "Second Server-side post",
-      content: "This is also coming from the server!",
-    },
-  ];
   // send status, then send posts as a JSON message!
   res.status(200).json({
     message: 'Posts fetched successfully!',
