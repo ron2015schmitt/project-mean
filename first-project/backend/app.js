@@ -13,7 +13,7 @@ main().catch(err => {
 });
 
 async function main() {
-  await mongoose.connect(`mongodb+srv://main:${password}@cluster0.ukfax.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`);
+  await mongoose.connect(`mongodb+srv://main:${password}@cluster0.ukfax.mongodb.net/mean-course?retryWrites=true&w=majority`);
 }
 
 
@@ -38,26 +38,13 @@ app.use((req, res, next) => {
   next();
 });
 
-// use hard-coded "database" for now
-let posts = [
-  {
-    id: "fa12823",
-    title: "First Server-side post",
-    content: "This is coming from the server!",
-  },
-  {
-    id: "rs23981",
-    title: "Second Server-side post",
-    content: "This is also coming from the server!",
-  },
-];
 
 app.post('/api/posts', (req, res, next) => {
   const post = new Post({
     title: req.body.title,
     content: req.body.content,
   })
-  posts.push(post);
+  post.save();
   console.log(`post received`,post);
   res.status(201).json({
     message: 'New post added successfully',
@@ -70,7 +57,7 @@ app.use('/api/posts', (req, res, next) => {
   // send status, then send posts as a JSON message!
   res.status(200).json({
     message: 'Posts fetched successfully!',
-    posts
+    posts: [],
   });
 });
 
