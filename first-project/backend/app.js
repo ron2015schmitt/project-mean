@@ -1,5 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+
+// This will be a class with a constructor
+const Post = require('./models/postDB');
+
 const app = express();
 
 app.use(bodyParser.json());
@@ -33,7 +37,10 @@ let posts = [
 ];
 
 app.post('/api/posts', (req, res, next) => {
-  let post = req.body;
+  const post = new Post({
+    title: req.body.title,
+    content: req.body.content,
+  })
   posts.push(post);
   console.log(`post received`,post);
   res.status(201).json({
