@@ -1,7 +1,23 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
-// This will be a class with a constructor
+// read password from bach environment
+require('dotenv').config();
+let password = process.env.MONGODB_PASSWORD;
+// console.log(`password: typeof=${typeof password}`, password);
+
+main().catch(err => {
+  console.log(`Connection to MongoDB failed.`);
+  console.log(err);
+});
+
+async function main() {
+  await mongoose.connect(`mongodb+srv://main:${password}@cluster0.ukfax.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`);
+}
+
+
+// This is the mongoose/mongoDB data model.  It is a class with a constructor
 const Post = require('./models/postDB');
 
 const app = express();
