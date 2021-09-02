@@ -52,7 +52,7 @@ app.post('/api/posts', (req, res, next) => {
 });
 
 // get the posts database
-app.use('/api/posts', (req, res, next) => {
+app.get('/api/posts', (req, res, next) => {
   // retrieve exisiting posts from MongoDB
   Post.find().then(documents => {
     // the data items in MongoDB are called documents
@@ -64,6 +64,15 @@ app.use('/api/posts', (req, res, next) => {
       posts: documents,
     });
   });
+});
+
+app.delete("/api/posts/:id", (req, res, next) => {
+  console.log(`app.js: delete request received id=${req.params.id}`);
+  Post.deleteOne({ _id: req.params.id })
+    .then(result => {
+      // console.log(result);
+      res.status(200).json({ message: "Post deleted!" });
+    });
 });
 
 module.exports = app;
