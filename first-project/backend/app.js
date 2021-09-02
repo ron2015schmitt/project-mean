@@ -45,7 +45,7 @@ app.post('/api/posts', (req, res, next) => {
     content: req.body.content,
   })
   post.save();
-  console.log(`post received`,post);
+  console.log(`post received`, post);
   res.status(201).json({
     message: 'New post added successfully',
   });
@@ -53,11 +53,16 @@ app.post('/api/posts', (req, res, next) => {
 
 // get the posts database
 app.use('/api/posts', (req, res, next) => {
-  // use hard-coded "database" for now
-  // send status, then send posts as a JSON message!
-  res.status(200).json({
-    message: 'Posts fetched successfully!',
-    posts: [],
+  // retrieve exisiting posts from MongoDB
+  Post.find().then(documents => {
+    // the data items in MongoDB are called documents
+    console.log(documents);
+    // retrieve is asynchronous, so we can't process until the callback gets called
+    // send status, then send posts as a JSON message!
+    res.status(200).json({
+      message: 'Posts fetched successfully!',
+      posts: documents,
+    });
   });
 });
 
