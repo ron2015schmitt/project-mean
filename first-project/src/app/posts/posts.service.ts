@@ -35,6 +35,11 @@ export class PostsService {
     return this.postsObserved.asObservable();
   }
 
+  getPost(id: string) {
+    // return local copy of post
+    return {...this.posts.find(p => p.id === id)};
+  }
+
   addPost(title: string, content: string) {
     const post: Post = { id: null, title, content };
     this.http.post<{ message: string, id: string }>('http://localhost:3000/api/posts', post)
