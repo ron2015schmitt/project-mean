@@ -35,24 +35,39 @@ app.use((req, res, next) => {
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET, POST, PATCH, DELETE, OPTIONS"
+    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
   );
   next();
 });
 
-
+// create a new post in the db
 app.post('/api/posts', (req, res, next) => {
   const post = new Post({
     title: req.body.title,
     content: req.body.content,
   })
-  console.log(`post received`, post);
+  console.log(`app.js: post request received route=${req.route.path}`, post);
   post.save().then(result => {
     res.status(201).json({
       message: 'New post added successfully',
       id: result._id,
     });
   });
+});
+
+// update a post given by id
+// ':id' implies that id is sent in req.params not req.body
+app.put('/api/posts/:id', (req, res, next) => {
+  const post = new Post({
+    _id: req.params.id,
+    title: req.body.title,
+    content: req.body.content,
+  });
+  console.log(`app.js: put request received id=${req.params.id} route=${req.route.path}`, post);
+  Post.updateOne({ _id: req.params.id }, post).then( result => {
+    console.log(`put /api/posts/:id: updated post on MongoDb `, result);
+    res.status(200).json({ message: 'Update Sucessful!' });
+  })
 });
 
 // get the posts database
@@ -70,6 +85,8 @@ app.get('/api/posts', (req, res, next) => {
   });
 });
 
+// delte a post given by id
+// ':id' implies that id is sent in req.params not req.body
 app.delete("/api/posts/:id", (req, res, next) => {
   console.log(`app.js: delete request received id=${req.params.id}`);
   Post.deleteOne({ _id: req.params.id })

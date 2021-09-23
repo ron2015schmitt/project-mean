@@ -52,6 +52,14 @@ export class PostsService {
       });
   }
 
+  updatePost(postId: string, title: string, content: string) {
+    const post: Post = { id: postId, title, content };
+    this.http.put(`http://localhost:3000/api/posts/${postId}`, post)
+    .subscribe((response) => {
+      console.log(`put response received: `, response);
+    });
+  }
+
   deletePost(postId: string) {
     // delete from MongoDB
     console.log(`delete button pressed id=${postId}`);
