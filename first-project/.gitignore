@@ -1,5 +1,9 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+
+# word backup files
+~$*.docx
+
 .history
 
 # ignore source files in backend/build
@@ -7,6 +11,9 @@
 
 #ignore angular output files in integrated build
 /backend/angular/
+
+#ninja tool
+.ninja_log
 
 # compiled output
 /dist
@@ -46,6 +53,3 @@ testem.log
 .DS_Store
 Thumbs.db
 
-
-# word backup files
-~$*.docx
