@@ -6,10 +6,11 @@
     "start": "ng serve",
     "build:dev": "ng build --configuration development",
     "build:integrated": "ng build --configuration production-integrated",
-    "build:separate": "ng build --configuration production-separate",
+    "build:separate": "ng build --configuration production-separate && npm --prefix backend/build/backend/ninja run build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "start:server": "set NODE_ENV=development&& nodemon server.js"
+    "start:server": "set NODE_ENV=development&& nodemon server.js",
+    "start:prod": "set NODE_ENV=production-integrated&& nodemon server.js"
   },
   "private": true,
   "dependencies": {

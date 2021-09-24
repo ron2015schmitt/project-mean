@@ -1,21 +1,23 @@
 
+const path = require('path');
+
 // for pretty logs
 const chalk = require('chalk');
 
+// load config
+const config = require('../config.js');
+console.log(`app.js: config.INTEGRATE_ANGULAR=${config.INTEGRATE_ANGULAR}`);
 
 
 // ---- Mongoose ----
 const mongoose = require('mongoose');
 
 // read password from bach environment
-const dotenv = require('dotenv').config();
 let password = process.env.MONGODB_PASSWORD;
-// console.log(`password: typeof=${typeof password}`, password);
-
 
 if (!password) {
-  console.error(`app.js: `+chalk.red.bold(`MONGODB_PASSWORD NOT provided`)+` (typeof password=${typeof password})`);
-  console.log(  `        You must type '`+chalk.magenta(`export MONGODB_PASSWORD=my-password`)+`' before running.`);
+  console.error(`app.js: ` + chalk.red.bold(`MONGODB_PASSWORD NOT provided`) + ` (typeof password=${typeof password})`);
+  console.log(`        You must type '` + chalk.magenta(`export MONGODB_PASSWORD=my-password`) + `' before running.`);
   process.exit(1);
 } else {
   console.log(`app.js: MONGODB_PASSWORD found! typeof=${typeof password}`);
@@ -41,7 +43,6 @@ const express = require('express');
 const app = express();
 
 const bodyParser = require('body-parser');
-const { config } = require('dotenv');
 const { exit } = require('process');
 
 app.use(bodyParser.json());
@@ -49,8 +50,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 if (config.INTEGRATE_ANGULAR) {
   // we need to serve up angular (URL with out any suffix)
-  const angDir = path.join("angular");
-  console.log(`config.js: serving Angular from ${angDir}`);
+  const angDir = path.join("dist");
+  console.log(`config.js: serving Angular from ${angDir}/`);
   app.use('/', express.static(angDir));
   app.set('view engine', 'pug');
 }

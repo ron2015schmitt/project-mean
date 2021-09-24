@@ -28,11 +28,10 @@
             ],
             "scripts": []
           },
-          "defaultConfiguration": "production-integrated",
           "configurations": {
 
             "production-integrated": {
-              "outputPath": "backend/angular",
+              "outputPath": "dist",
               "budgets": [
                 {
                   "type": "initial",
@@ -88,7 +87,8 @@
               "namedChunks": true
             }
 
-          }
+          },
+          "defaultConfiguration": "production-integrated"
         },
 
         "serve": {

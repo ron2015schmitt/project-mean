@@ -14,7 +14,9 @@ export class PostsService {
 
   getPosts() {
     // get posts from back-end using http request!
-    return this.http.get<{ message: string, posts: any }>(environment.apiUrl+'/posts')
+    const url = environment.apiUrl+'/posts';
+    console.log(`send get message to : `, url);
+    return this.http.get<{ message: string, posts: any }>(url)
       .pipe(
         map(postData => {
           return postData.posts.map(post => {
@@ -26,6 +28,7 @@ export class PostsService {
           });
         })
       ).subscribe((postData) => {
+        console.log(`get response received: `, postData);
         this.posts = postData;
         // update all the listeners
         this.postsObserved.next([...this.posts]);

@@ -16,7 +16,6 @@ const http = require('http');
 // get our ExpressJS application
 const app = require('./backend/app');
 
-
 // ---------------------------------------------------------------
 // helper functions
 
@@ -91,7 +90,7 @@ const port = normalizePort(config.PORT);
 app.set('port', port);
 
 
-// create and start the Node server using the Express app
+// create and start the server using the Express app
 const server = http.createServer(app);
 server.on("error", onError);  // closure for error occurs here so includes port
 server.on("listening", onListening); // closure for error occurs here so includes server and port
