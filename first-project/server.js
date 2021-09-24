@@ -1,8 +1,13 @@
-console.log('Node.js: My First MEAN App Server Started');
+// for pretty logs
+const chalk = require('chalk');
+
+console.log('');
 
 // load configuration
 const config = require('./config.js');
-console.log(`HOST=${config.HOST} NODE_ENV=${config.NODE_ENV}`);
+
+console.log('Node.js: '+chalk.green(config.NAME)+' Server Started');
+console.log(`config: HOST=`+chalk.green(config.HOST)+` NODE_ENV=`+chalk.green(config.NODE_ENV)+` PORT=`+chalk.green(config.PORT));
 
 // node.js requires
 const debug = require("debug")("node-angular");
@@ -11,7 +16,10 @@ const http = require('http');
 // get our ExpressJS application
 const app = require('./backend/app');
 
+
+// ---------------------------------------------------------------
 // helper functions
+
 const binder = (addr, port) => (typeof addr === "string") ? `pipe ${addr}` : `port ${port}`;
 
 function curry(func) {
@@ -56,11 +64,11 @@ const onError = (error) => {
 
   switch (error.code) {
     case "EACCES":
-      console.error(`${bind} requires elevated priviledges`);
+      console.error(chalk.red(`${bind} requires elevated privileges`));
       process.exit(1);
       break;
     case "EADDRINUSE":
-      console.error(`${bind} is already in use`);
+      console.error(chalk.red(`${bind} is already in use`));
       process.exit(1);
       break;
     default:
@@ -77,14 +85,17 @@ const onListening = () => {
 }
 
 
+// ---------------------------------------------------------------
+
 const port = normalizePort(config.PORT);
 app.set('port', port);
+
 
 // create and start the Node server using the Express app
 const server = http.createServer(app);
 server.on("error", onError);  // closure for error occurs here so includes port
 server.on("listening", onListening); // closure for error occurs here so includes server and port
 server.listen(port, config.HOST, () => {
-  console.log(`App listening on http://${config.HOST}:${config.PORT}`);
+  console.log(`App listening on `+chalk.green(`http://${config.HOST}:${port}`));
 });
 

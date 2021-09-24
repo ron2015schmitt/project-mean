@@ -13,9 +13,6 @@ let password = process.env.MONGODB_PASSWORD;
 // console.log(`password: typeof=${typeof password}`, password);
 
 
-const white = 'color: #ffffff';
-const red = 'color: #ff0000';
-
 if (!password) {
   console.error(`app.js: `+chalk.red.bold(`MONGODB_PASSWORD NOT provided`)+` (typeof password=${typeof password})`);
   console.log(  `        You must type '`+chalk.magenta(`export MONGODB_PASSWORD=my-password`)+`' before running.`);
