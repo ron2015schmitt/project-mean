@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { Post } from './post.model';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
-import { PostCreateComponent } from './post-create/post-create.component';
+import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class PostsService {
@@ -14,7 +14,7 @@ export class PostsService {
 
   getPosts() {
     // get posts from back-end using http request!
-    return this.http.get<{ message: string, posts: any }>('http://localhost:3000/api/posts')
+    return this.http.get<{ message: string, posts: any }>(environment.apiUrl+'/posts')
       .pipe(
         map(postData => {
           return postData.posts.map(post => {
@@ -42,7 +42,7 @@ export class PostsService {
 
   addPost(title: string, content: string) {
     const post: Post = { id: null, title, content };
-    this.http.post<{ message: string, id: string }>('http://localhost:3000/api/posts', post)
+    this.http.post<{ message: string, id: string }>(environment.apiUrl+'/posts', post)
       .subscribe((response) => {
         console.log(`add response received: `, response.message);
         post.id = response.id;
@@ -54,7 +54,7 @@ export class PostsService {
 
   updatePost(postId: string, title: string, content: string) {
     const post: Post = { id: postId, title, content };
-    this.http.put(`http://localhost:3000/api/posts/${postId}`, post)
+    this.http.put(environment.apiUrl+'/'+postId, post)
     .subscribe((response) => {
       console.log(`put response received: `, response);
     });
@@ -63,7 +63,7 @@ export class PostsService {
   deletePost(postId: string) {
     // delete from MongoDB
     console.log(`delete button pressed id=${postId}`);
-    this.http.delete(`http://localhost:3000/api/posts/${postId}`)
+    this.http.delete(environment.apiUrl+'/'+postId)
       .subscribe(() => {
         // delete from our local copy
         this.posts = this.posts.filter(post => post.id !== postId);
