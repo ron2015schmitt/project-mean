@@ -1,14 +1,22 @@
-const express = require('express');
-const bodyParser = require('body-parser');
+
+
+// ---- Mongoose ----
 const mongoose = require('mongoose');
 
 // read password from bach environment
-require('dotenv').config();
+const dotenv = require('dotenv').config();
 let password = process.env.MONGODB_PASSWORD;
 // console.log(`password: typeof=${typeof password}`, password);
+if (!password) {
+  console.error(`app.js: MONGODB_PASSWORD NOT provided: typeof=${typeof password}`);
+  console.log(  `        You must type 'export MONGODB_PASSWORD=my-password' before running.`);
+
+} else {
+  console.log(`app.js: MONGODB_PASSWORD found! typeof=${typeof password}`);
+}
 
 main().catch(err => {
-  console.log(`Connection to MongoDB failed.`);
+  console.log(`app.js: Connection to MongoDB failed.`);
   console.log(err);
 });
 
@@ -16,15 +24,29 @@ async function main() {
   await mongoose.connect(`mongodb+srv://main:${password}@cluster0.ukfax.mongodb.net/mean-course?retryWrites=true&w=majority`);
 }
 
-
 // This is the mongoose/mongoDB data model.  It is a class with a constructor
 const Post = require('./models/postDB');
 
+
+
+// ---- express app ----
+
+const express = require('express');
 const app = express();
+
+const bodyParser = require('body-parser');
+const { config } = require('dotenv');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-// app.use('/', express.static(path.join("angular")));
+
+if (config.INTEGRATE_ANGULAR) {
+  // we need to serve up angular (URL with out any suffix)
+  const angDir = path.join("angular");
+  console.log(`config.js: serving Angular from ${angDir}`);
+  app.use('/', express.static(angDir));
+  app.set('view engine', 'pug');
+}
 
 // give permissions for the front-end to access
 app.use((req, res, next) => {
@@ -64,8 +86,8 @@ app.put('/api/posts/:id', (req, res, next) => {
     content: req.body.content,
   });
   console.log(`app.js: put request received id=${req.params.id} route=${req.route.path}`, post);
-  Post.updateOne({ _id: req.params.id }, post).then( result => {
-    console.log(`put /api/posts/:id: updated post on MongoDb `, result);
+  Post.updateOne({ _id: req.params.id }, post).then(result => {
+    console.log(`app.js: put /api/posts/:id: updated post on MongoDb `, result);
     res.status(200).json({ message: 'Update Sucessful!' });
   })
 });
@@ -85,7 +107,7 @@ app.get('/api/posts', (req, res, next) => {
   });
 });
 
-// delte a post given by id
+// delete a post given by id
 // ':id' implies that id is sent in req.params not req.body
 app.delete("/api/posts/:id", (req, res, next) => {
   console.log(`app.js: delete request received id=${req.params.id}`);
@@ -96,8 +118,13 @@ app.delete("/api/posts/:id", (req, res, next) => {
     });
 });
 
-// app.use('/api/posts', (req, res, next) => {
-//   res.sendFile(path.join(__dirname, "angular", "index.html"));
-// });
+
+if (config.INTEGRATE_ANGULAR) {
+  app.use('/api/posts', (req, res, next) => {
+    const angIndex = path.join(__dirname, "angular", "index.html");
+    console.log(`config.js: sending Angular FE: ${angIndex}`);
+    res.sendFile(angIndex);
+  });
+}
 
 module.exports = app;

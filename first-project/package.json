@@ -4,10 +4,12 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build:dev": "ng build --configuration development",
+    "build:integrated": "ng build --configuration production-integrated",
+    "build:separate": "ng build --configuration production-separate",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "start:server": "nodemon server.js"
+    "start:server:": "set NODE_ENV=development&& nodemon server.js"
   },
   "private": true,
   "dependencies": {
@@ -23,7 +25,8 @@
     "@angular/router": "~12.2.3",
     "body-parser": "^1.19.0",
     "dotenv": "^10.0.0",
-    "mongoose": "^6.0.3",
+    "mongoose": "^6.0.7",
+    "pug": "^3.0.2",
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",
     "zone.js": "~0.11.4"
