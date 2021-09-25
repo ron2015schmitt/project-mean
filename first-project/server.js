@@ -14,7 +14,7 @@ const debug = require("debug")("node-angular");
 const http = require('http');
 
 // get our ExpressJS application
-const app = require('./backend/app');
+const app = require('./app');
 
 // ---------------------------------------------------------------
 // helper functions
