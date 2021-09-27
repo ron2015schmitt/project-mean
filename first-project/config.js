@@ -6,10 +6,15 @@ const dotenv = require('dotenv').config({ path: envFile }).parsed;
 
 console.log(dotenv);
 
-module.exports = {
+
+const config = {
   NODE_ENV: dotenv.NODE_ENV || 'development',
   HOST: dotenv.HOST || '127.0.0.1',
   PORT: dotenv.PORT || 3000,
-  INTEGRATE_ANGULAR: (dotenv.INTEGRATE_ANGULAR == 'true'),
-  NAME: 'MEAN course project'
+  INTEGRATE_ANGULAR: (new RegExp(/-integrated/, 'i')).test(dotenv.NODE_ENV),
+  PRODUCTION: (new RegExp(/^production/, 'i')).test(dotenv.NODE_ENV),
+  NAME: dotenv.NAME || 'MEAN course project'
 }
+
+console.log(config);
+module.exports = config;

@@ -3,14 +3,16 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
     "build:dev": "ng build --configuration development",
     "build:integrated": "ng build --configuration production-integrated",
-    "build:separate": "ng build --configuration production-separate && npm --prefix backend/build/backend/ninja run build",
+    "build:separate": "ng build --configuration production-separate",
+    "start:dev:fe": "ng serve",
+    "start:dev:server": "set NODE_ENV=development&& nodemon server.js",
+    "start:prod": "set NODE_ENV=production-integrated&& nodemon server.js",
+    "start:prod:fe": "lite-server",
+    "start:prod:server": "set NODE_ENV=production-separate&& nodemon server.js",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "start:server": "set NODE_ENV=development&& nodemon server.js",
-    "start:prod": "set NODE_ENV=production-integrated&& nodemon server.js"
+    "test": "ng test"
   },
   "private": true,
   "dependencies": {
@@ -24,16 +26,15 @@
     "@angular/platform-browser": "~12.2.3",
     "@angular/platform-browser-dynamic": "~12.2.3",
     "@angular/router": "~12.2.3",
-    "rxjs": "~6.6.0",
-    "tslib": "^2.2.0",
-    "zone.js": "~0.11.4",
-
     "body-parser": "^1.19.0",
     "chalk": "^4.1.2",
     "dotenv": "^10.0.0",
+    "lite-server": "^2.6.1",
     "mongoose": "^6.0.7",
-
-    "pug": "^3.0.2"
+    "pug": "^3.0.2",
+    "rxjs": "~6.6.0",
+    "tslib": "^2.2.0",
+    "zone.js": "~0.11.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~12.2.3",

@@ -6,7 +6,7 @@ const chalk = require('chalk');
 
 // load config
 const config = require('./config.js');
-console.log(`app.js: config.INTEGRATE_ANGULAR=${config.INTEGRATE_ANGULAR}`);
+// console.log(`app.js: config.INTEGRATE_ANGULAR=${config.INTEGRATE_ANGULAR}`);
 
 
 // ---- Mongoose ----
@@ -26,6 +26,7 @@ if (!password) {
 main().catch(err => {
   console.log(`app.js: Connection to MongoDB failed.`);
   console.log(err);
+  process.exit(1);
 });
 
 async function main() {
@@ -50,8 +51,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 if (config.INTEGRATE_ANGULAR) {
   // we need to serve up angular (URL with out any suffix)
-  const angDir = path.join("dist");
-  console.log(`config.js: serving Angular from ${angDir}/`);
+  const angDir = path.join("dist/integrated");
+  console.log(`config.js: serving Angular from ${angDir}`);
   app.use('/', express.static(angDir));
   app.set('view engine', 'pug');
 }

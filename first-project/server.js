@@ -6,8 +6,8 @@ console.log('');
 // load configuration
 const config = require('./config.js');
 
-console.log('Node.js: '+chalk.green(config.NAME)+' Server Started');
-console.log(`config: HOST=`+chalk.green(config.HOST)+` NODE_ENV=`+chalk.green(config.NODE_ENV)+` PORT=`+chalk.green(config.PORT));
+// console.log('Node.js: '+chalk.green(config.NAME)+' Server Started');
+// console.log(`config: HOST=`+chalk.green(config.HOST)+` NODE_ENV=`+chalk.green(config.NODE_ENV)+` PORT=`+chalk.green(config.PORT));
 
 // node.js requires
 const debug = require("debug")("node-angular");
