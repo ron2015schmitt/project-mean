@@ -59,6 +59,7 @@ if (config.INTEGRATE_ANGULAR) {
 
 // give permissions for the front-end to access
 app.use((req, res, next) => {
+  console.log(`app.js: permissions request received`);
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Headers",
@@ -66,7 +67,7 @@ app.use((req, res, next) => {
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+    "GET, POST, PUT, PATCH, DELETE, UPDATE"
   );
   next();
 });

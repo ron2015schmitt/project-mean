@@ -57,7 +57,7 @@ export class PostsService {
 
   updatePost(postId: string, title: string, content: string) {
     const post: Post = { id: postId, title, content };
-    this.http.put(environment.apiUrl+'/'+postId, post)
+    this.http.put(environment.apiUrl+'/posts/'+postId, post)
     .subscribe((response) => {
       console.log(`put response received: `, response);
     });
@@ -65,8 +65,8 @@ export class PostsService {
 
   deletePost(postId: string) {
     // delete from MongoDB
-    console.log(`delete button pressed id=${postId}`);
-    this.http.delete(environment.apiUrl+'/'+postId)
+    console.log(`delete button pressed id=${postId} path=${environment.apiUrl+'/posts/'+postId}`);
+    this.http.delete(environment.apiUrl+'/posts/'+postId)
       .subscribe(() => {
         // delete from our local copy
         this.posts = this.posts.filter(post => post.id !== postId);
