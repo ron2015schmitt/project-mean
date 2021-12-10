@@ -79,6 +79,7 @@ app.post('/api/posts', (req, res, next) => {
     content: req.body.content,
   })
   console.log(`app.js: post request received route=${req.route.path}`, post);
+  console.log(req.body);
   post.save().then(result => {
     res.status(201).json({
       message: 'New post added successfully',

@@ -19,7 +19,7 @@ export class PostListComponent implements OnInit {
     // get the posts from the back-end
     this.postsService.getPosts();
 
-    // subcribe to PostsService and on each update, we set our array from PostsService's copy
+    // subscribe to PostsService and on each update, we set our array from PostsService's copy
     this.postsSub = this.postsService.getPostUpdatedListener()
       .subscribe((posts: Post[]) => (this.posts = posts) );
   }

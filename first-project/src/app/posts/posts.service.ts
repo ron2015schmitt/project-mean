@@ -45,6 +45,7 @@ export class PostsService {
 
   addPost(title: string, content: string) {
     const post: Post = { id: null, title, content };
+    console.warn(`addPost: post:`,post)
     this.http.post<{ message: string, id: string }>(environment.apiUrl+'/posts', post)
       .subscribe((response) => {
         console.log(`add response received: `, response.message);
