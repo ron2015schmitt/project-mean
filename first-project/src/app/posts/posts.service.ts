@@ -39,8 +39,8 @@ export class PostsService {
   }
 
   getPost(id: string) {
-    // return local copy of post
-    return {...this.posts.find(p => p.id === id)};
+    // return an observable that consumer can subscribe to   
+    return this.http.get<{ _id: string, title: string, content: string, }>(environment.apiUrl+'/posts/'+id);
   }
 
   addPost(title: string, content: string) {
@@ -61,7 +61,14 @@ export class PostsService {
     this.http.put(environment.apiUrl+'/posts/'+postId, post)
     .subscribe((response) => {
       console.log(`put response received: `, response);
+      // update local copy. not needed at this point, but do it anyway
+      const updatedPosts = [...this.posts];
+      const oldPostIndex = updatedPosts.findIndex(p => p.id === post.id);
+      updatedPosts[oldPostIndex] = post;
+      this.posts = updatedPosts;
+      this.postsObserved.next([...this.posts]);
     });
+    
   }
 
   deletePost(postId: string) {

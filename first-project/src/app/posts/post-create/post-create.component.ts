@@ -25,7 +25,10 @@ export class PostCreateComponent implements OnInit {
         this.mode = 'edit';
         // we extratc the postId from the URL parameters
         this.postId = paramMap.get('postId');
-        this.post = this.postsService.getPost(this.postId);
+        // subscribe to the service that will get the post from the backend
+        this.postsService.getPost(this.postId).subscribe( postData => {
+          this.post = { id: postData._id, title: postData.title, content: postData.content };
+        });
       } else {
         this.mode = 'create';
         this.postId = null;

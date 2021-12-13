@@ -118,6 +118,20 @@ app.get('/api/posts', (req, res, next) => {
   });
 });
 
+// update a post given by id
+// ':id' implies that id is sent in req.params not req.body
+app.get('/api/posts/:id', (req, res, next) => {
+  Post.findById(req.params.id).then(post => {
+    if (post) {
+      res.status(200).json(post);
+    } else {
+      res.status(404).json({
+        message: 'Post not found!',
+      });
+    }
+  });
+});
+
 // delete a post given by id
 // ':id' implies that id is sent in req.params not req.body
 app.delete("/api/posts/:id", (req, res, next) => {
