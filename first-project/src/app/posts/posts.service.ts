@@ -4,13 +4,14 @@ import { Post } from './post.model';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class PostsService {
   private posts: Post[] = [];
   private postsObserved = new Subject<Post[]>();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   getPosts() {
     // get posts from back-end using http request!
@@ -53,6 +54,8 @@ export class PostsService {
         this.posts.push(post);
         // update all the listeners
         this.postsObserved.next([...this.posts]);
+        // navigate back to homepage
+        this.router.navigate(["/"]);
       });
   }
 
@@ -67,6 +70,8 @@ export class PostsService {
         updatedPosts[oldPostIndex] = post;
         this.posts = updatedPosts;
         this.postsObserved.next([...this.posts]);
+        // navigate back to homepage
+        this.router.navigate(["/"]);
       });
 
   }

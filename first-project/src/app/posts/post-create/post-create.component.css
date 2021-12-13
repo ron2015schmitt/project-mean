@@ -10,3 +10,7 @@ mat-form-field, textarea {
 mat-form-field, button {
   margin-top: 1rem;
 }
+
+mat-spinner {
+  margin: auto;
+}

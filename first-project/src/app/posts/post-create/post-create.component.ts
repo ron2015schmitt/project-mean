@@ -14,6 +14,7 @@ export class PostCreateComponent implements OnInit {
   private mode: string = 'create';
   private postId: string;
   post: Post;
+  isLoading: boolean = false;
 
   constructor(public postsService: PostsService, public route: ActivatedRoute) {
 
@@ -26,8 +27,10 @@ export class PostCreateComponent implements OnInit {
         // we extratc the postId from the URL parameters
         this.postId = paramMap.get('postId');
         // subscribe to the service that will get the post from the backend
-        this.postsService.getPost(this.postId).subscribe( postData => {
+        this.isLoading = true;
+        this.postsService.getPost(this.postId).subscribe(postData => {
           this.post = { id: postData._id, title: postData.title, content: postData.content };
+          this.isLoading = false;
         });
       } else {
         this.mode = 'create';
@@ -45,6 +48,7 @@ export class PostCreateComponent implements OnInit {
   onSavePost(form: NgForm) {
     if (form.invalid) return;
     console.log(`onSavePost: form:`, form);
+    this.isLoading = true;
     if (this.mode === "create") {
       console.log(`onSavePost: create new post`);
       this.postsService.addPost(form.value.title, form.value.content);
