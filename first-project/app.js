@@ -30,6 +30,7 @@ main().catch(err => {
 
 async function main() {
   await mongoose.connect(`mongodb+srv://main:${password}@cluster0.ukfax.mongodb.net/mean-course?retryWrites=true&w=majority`);
+  // await mongoose.connect(`mongodb+srv://main:${password}@cluster0.ukfax.mongodb.net/mean-course`);
 }
 
 
