@@ -19,4 +19,14 @@ export class AuthService {
         console.log(response);
       });
   }
+
+  login(email: string, password: string) {
+    const authData: AuthData = { email, password } as AuthData;
+    console.log(`authService.login: authData:`, authData);
+    this.http.post<AuthData>(environment.apiUrl + '/user/login', authData)
+      .subscribe(response => {
+        console.log(response);
+      });
+  }
+
 }
