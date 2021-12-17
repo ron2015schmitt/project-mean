@@ -79,7 +79,10 @@ if (config.INTEGRATE_ANGULAR) {
 
 
 // routes
-const postsRoutes = require('./posts');
+const postsRoutes = require('./routes/posts');
 app.use("/api/posts", postsRoutes);
+
+const userRoutes = require('./routes/user');
+app.use("/api/user", userRoutes);
 
 module.exports = app;
