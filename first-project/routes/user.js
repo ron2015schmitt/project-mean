@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 
 // This is the mongoose/mongoDB data model.  It is a class with a constructor
 const User = require('../schemas/user');
+const secret = require('../middleware/secret');
 
 
 // create a new user in the db
@@ -55,7 +56,7 @@ router.post('/login', (req, res, next) => {
         console.log(`user.js: login succeeded:`, result);
         const token = jwt.sign(
             { email: user.email, userId: user._id },
-            'secret_this_should_be_longer',
+            secret,
             { expiresIn: '1h' },
         );
         console.log(`user.js: got token:`, token);

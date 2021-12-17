@@ -3,10 +3,11 @@ const router = express.Router();
 
 // This is the mongoose/mongoDB data model.  It is a class with a constructor
 const Post = require('../schemas/post');
+const checkAuth = require("../middleware/check-auth");
 
 
 // create a new post in the db
-router.post('', (req, res, next) => {
+router.post('', checkAuth, (req, res, next) => {
     const post = new Post({
         title: req.body.title,
         content: req.body.content,
@@ -23,7 +24,7 @@ router.post('', (req, res, next) => {
 
 // update a post given by id
 // ':id' implies that id is sent in req.params not req.body
-router.put('/:id', (req, res, next) => {
+router.put('/:id', checkAuth, (req, res, next) => {
     const post = new Post({
         _id: req.params.id,
         title: req.body.title,
@@ -67,7 +68,7 @@ router.get('/:id', (req, res, next) => {
 
 // delete a post given by id
 // ':id' implies that id is sent in req.params not req.body
-router.delete("/:id", (req, res, next) => {
+router.delete("/:id", checkAuth, (req, res, next) => {
     console.log(`posts.js: delete request received id=${req.params.id}`);
     Post.deleteOne({ _id: req.params.id })
         .then(result => {
