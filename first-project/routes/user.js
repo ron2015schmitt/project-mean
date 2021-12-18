@@ -62,6 +62,7 @@ router.post('/login', (req, res, next) => {
         console.log(`user.js: got token:`, token);
         res.status(200).json({
             token,
+            expiresIn: 3600,
         });
     }).catch(err => {
         console.log(`user.js: user login failed`, err);

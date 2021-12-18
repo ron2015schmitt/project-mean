@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
   private token: string;
+  private tokenTimer: NodeJS.Timer;
   private authStatusListener = new Subject<boolean>();
   isAuthenticated = false;
   isLoading = false;
@@ -44,20 +45,33 @@ export class AuthService {
   login(email: string, password: string) {
     const authData: AuthData = { email, password } as AuthData;
     console.log(`authService.login: authData:`, authData);
-    this.http.post<{ token }>(environment.apiUrl + '/user/login', authData)
-      .subscribe(response => {
-        console.log(response);
-        this.token = response.token;
+    this.http.post<{ token: string, expiresIn: number }>(
+      environment.apiUrl + '/user/login',
+      authData,
+    ).subscribe(response => {
+      console.log(response);
+      const token = response.token;
+      this.token = token;
+      if (token) {
+        const expiresInDuration = response.expiresIn;
+        // console.log(expiresInDuration);
+        this.tokenTimer = setTimeout(() => {
+          this.logout();
+        },
+          1000 * expiresInDuration
+        );
         this.isAuthenticated = true;
         this.authStatusListener.next(true);
         this.router.navigate(['/']);
-      });
+      }
+    });
   }
 
   logout() {
     this.token = null;
     this.isAuthenticated = false;
     this.authStatusListener.next(false);
+    clearTimeout(this.tokenTimer);
     this.router.navigate(['/']);
   }
 
