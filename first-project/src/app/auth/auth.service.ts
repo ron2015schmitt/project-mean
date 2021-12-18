@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { AuthData } from './auth-data';
 import { environment } from 'src/environments/environment';
 import { Subject } from 'rxjs';
+import { Router } from '@angular/router';
 
 
 @Injectable({
@@ -12,8 +13,12 @@ export class AuthService {
   private token: string;
   private authStatusListener = new Subject<boolean>();
   isAuthenticated = false;
+  isLoading = false;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+  ) { }
 
   getToken() {
     return this.token;
@@ -39,12 +44,13 @@ export class AuthService {
   login(email: string, password: string) {
     const authData: AuthData = { email, password } as AuthData;
     console.log(`authService.login: authData:`, authData);
-    this.http.post<{token}>(environment.apiUrl + '/user/login', authData)
+    this.http.post<{ token }>(environment.apiUrl + '/user/login', authData)
       .subscribe(response => {
         console.log(response);
         this.token = response.token;
         this.isAuthenticated = true;
         this.authStatusListener.next(true);
+        this.router.navigate(['/']);
       });
   }
 
@@ -52,6 +58,7 @@ export class AuthService {
     this.token = null;
     this.isAuthenticated = false;
     this.authStatusListener.next(false);
+    this.router.navigate(['/']);
   }
 
 }
