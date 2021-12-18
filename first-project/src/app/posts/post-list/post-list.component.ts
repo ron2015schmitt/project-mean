@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Subscription } from 'rxjs';
+import { AuthService } from "src/app/auth/auth.service";
 import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
 
@@ -12,9 +13,14 @@ import { PostsService } from '../posts.service';
 export class PostListComponent implements OnInit {
   posts: Post[] = [];
   private postsSub: Subscription;
+  private authStatusSub: Subscription;
   isLoading: boolean = false;
+  userIsAuthenticated = false;
 
-  constructor(public postsService: PostsService) { }
+  constructor(
+    public postsService: PostsService,
+    private authService: AuthService,
+  ) { }
 
   ngOnInit() {
     // get the posts from the back-end
@@ -28,10 +34,16 @@ export class PostListComponent implements OnInit {
         this.posts = posts;
         this.isLoading = false;
       });
+    this.userIsAuthenticated = this.authService.getIsAuth();
+    this.authStatusSub = this.authService.getAuthStatusListener()
+      .subscribe(isAuthenticated => {
+        this.userIsAuthenticated = isAuthenticated;
+      });
   }
 
   ngOnDestroy() {
     this.postsSub.unsubscribe();
+    this.authStatusSub.unsubscribe();
   }
 
   onDelete(id: string) {
