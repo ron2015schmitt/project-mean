@@ -42,11 +42,16 @@ export class PostsService {
 
   getPost(id: string) {
     // return an observable that consumer can subscribe to   
-    return this.http.get<{ _id: string, title: string, content: string, }>(environment.apiUrl + '/posts/' + id);
+    return this.http.get<{ _id: string, title: string, content: string, creator: string}>(environment.apiUrl + '/posts/' + id);
   }
 
   addPost(title: string, content: string) {
-    const post: Post = { id: null, title, content };
+    const post: Post = { 
+      id: null, 
+      title, 
+      content,
+      creator: null,  // let backend fill-in creator
+     };
     console.warn(`addPost: post:`, post)
     this.http.post<{ message: string, id: string }>(environment.apiUrl + '/posts', post)
       .subscribe((response) => {
@@ -61,7 +66,13 @@ export class PostsService {
   }
 
   updatePost(postId: string, title: string, content: string) {
-    const post: Post = { id: postId, title, content };
+    // to prevent hacking, we don't include creator here. backend will fill out
+    const post: Post = { 
+      id: null, 
+      title, 
+      content,
+      creator: null, // let backend fill-in creator
+     };
     this.http.put(environment.apiUrl + '/posts/' + postId, post)
       .subscribe((response) => {
         console.log(`put response received: `, response);

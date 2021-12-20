@@ -29,7 +29,12 @@ export class PostCreateComponent implements OnInit {
         // subscribe to the service that will get the post from the backend
         this.isLoading = true;
         this.postsService.getPost(this.postId).subscribe(postData => {
-          this.post = { id: postData._id, title: postData.title, content: postData.content };
+          this.post = { 
+            id: postData._id, 
+            title: postData.title, 
+            content: postData.content,
+            creator: postData.creator,
+           };
           this.isLoading = false;
         });
       } else {

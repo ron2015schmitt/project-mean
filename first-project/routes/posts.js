@@ -30,11 +30,15 @@ router.put('/:id', checkAuth, (req, res, next) => {
         _id: req.params.id,
         title: req.body.title,
         content: req.body.content,
+        creator: req.userData.userId,  // collect creator from userData, NOT body
     });
     console.log(`posts.js: put request received id=${req.params.id} route=${req.route.path}`, post);
-    Post.updateOne({ _id: req.params.id, creator: req.userData.userId }, post).then(result => {
+    Post.updateOne({ 
+        _id: req.params.id, 
+        creator: req.userData.userId
+     }, post).then(result => {
         console.log(`posts.js: put /api/posts/:id: updated post on MongoDb `, result);
-        if (result.nModified) {
+        if (result.modifiedCount) {
             res.status(200).json({ message: 'Update Successful!' });
         } else {
             res.status(401).json({ message: 'User not authorized for modifying this post!' });
@@ -57,7 +61,7 @@ router.get('', (req, res, next) => {
     });
 });
 
-// update a post given by id
+// get a post given by id
 // ':id' implies that id is sent in req.params not req.body
 router.get('/:id', (req, res, next) => {
     Post.findById(req.params.id).then(post => {
@@ -75,15 +79,17 @@ router.get('/:id', (req, res, next) => {
 // ':id' implies that id is sent in req.params not req.body
 router.delete("/:id", checkAuth, (req, res, next) => {
     console.log(`posts.js: delete request received id=${req.params.id}`);
-    Post.deleteOne({ _id: req.params.id })
-        .then(result => {
-            // console.log(result);
-            if (result.n) {
-                res.status(200).json({ message: "Post deleted!" });
-            } else {
-                res.status(401).json({ message: 'User not authorized to delete this post!' });
-            }
-        });
+    Post.deleteOne({
+        _id: req.params.id,
+        creator: req.userData.userId,  // collect creator from userData, NOT body
+    }).then(result => {
+        console.log(result);
+        if (result.deletedCount) {
+            res.status(200).json({ message: "Post deleted!" });
+        } else {
+            res.status(401).json({ message: 'User not authorized to delete this post!' });
+        }
+    });
 });
 
 
