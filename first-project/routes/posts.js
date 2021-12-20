@@ -13,8 +13,9 @@ router.post('', checkAuth, (req, res, next) => {
         content: req.body.content,
         creator: req.userData.userId,
     })
-    console.log(`posts.js: post request received route=${req.route.path}`, post);
-    console.log(req.body);
+    console.log(`posts.js: post request received route=${req.route.path}`);
+    console.log(`          body:`, req.body);
+    console.log(`          post:`, post);
     post.save().then(result => {
         res.status(201).json({
             message: 'New post added successfully',
@@ -30,8 +31,10 @@ router.put('/:id', checkAuth, (req, res, next) => {
         _id: req.params.id,
         title: req.body.title,
         content: req.body.content,
+        creator: req.userData.userId,
     });
     console.log(`posts.js: put request received id=${req.params.id} route=${req.route.path}`, post);
+    // here we check both the post id and userid 
     Post.updateOne({ _id: req.params.id, creator: req.userData.userId }, post).then(result => {
         console.log(`posts.js: put /api/posts/:id: updated post on MongoDb `, result);
         if (result.nModified) {
