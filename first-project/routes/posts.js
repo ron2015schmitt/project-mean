@@ -11,6 +11,7 @@ router.post('', checkAuth, (req, res, next) => {
     const post = new Post({
         title: req.body.title,
         content: req.body.content,
+        creator: req.userData.userId,
     })
     console.log(`posts.js: post request received route=${req.route.path}`, post);
     console.log(req.body);
@@ -31,9 +32,13 @@ router.put('/:id', checkAuth, (req, res, next) => {
         content: req.body.content,
     });
     console.log(`posts.js: put request received id=${req.params.id} route=${req.route.path}`, post);
-    Post.updateOne({ _id: req.params.id }, post).then(result => {
+    Post.updateOne({ _id: req.params.id, creator: req.userData.userId }, post).then(result => {
         console.log(`posts.js: put /api/posts/:id: updated post on MongoDb `, result);
-        res.status(200).json({ message: 'Update Sucessful!' });
+        if (result.nModified) {
+            res.status(200).json({ message: 'Update Successful!' });
+        } else {
+            res.status(401).json({ message: 'User not authorized for modifying this post!' });
+        }
     })
 });
 
@@ -73,7 +78,11 @@ router.delete("/:id", checkAuth, (req, res, next) => {
     Post.deleteOne({ _id: req.params.id })
         .then(result => {
             // console.log(result);
-            res.status(200).json({ message: "Post deleted!" });
+            if (result.n) {
+                res.status(200).json({ message: "Post deleted!" });
+            } else {
+                res.status(401).json({ message: 'User not authorized to delete this post!' });
+            }
         });
 });
 
