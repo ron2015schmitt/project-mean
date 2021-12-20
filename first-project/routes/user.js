@@ -63,7 +63,6 @@ router.post('/login', (req, res, next) => {
         res.status(200).json({
             token,
             expiresIn: 3600,
-            userId: user._id,
         });
     }).catch(err => {
         console.log(`user.js: user login failed`, err);
@@ -74,4 +73,3 @@ router.post('/login', (req, res, next) => {
 });
 
 module.exports = router;
-
