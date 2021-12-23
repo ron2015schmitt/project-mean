@@ -75,7 +75,7 @@ router.put(
             // user submitted a new image file
             const url = req.protocol + "://" + req.get("host");
             imagePath = url + "/images/" + req.file.filename;
-        } 
+        }
         console.log(`imagePath=${imagePath}`);
         const post = new Post({
             _id: req.params.id,
@@ -100,8 +100,20 @@ router.put(
 
 // get the posts database
 router.get('', (req, res, next) => {
+    // get the query paramaters
+    const pageSize = Number(req.query.pagesize);
+    const currentPage = Number(req.query.page);
+    let postQuery = Post.find();
+    // here we filter down the results after we get all the posts form the db
+    // for a large db we would want to do this differently
+    if (pageSize && currentPage) {
+        console.log(`pageSize=${pageSize} currentPage=${currentPage}`)
+        postQuery
+            .skip(pageSize * (currentPage - 1))
+            .limit(pageSize);
+    }
     // retrieve exisiting posts from MongoDB
-    Post.find().then(documents => {
+    postQuery.then(documents => {
         // the data items in MongoDB are called documents
         console.log(documents);
         // retrieve is asynchronous, so we can't process until the callback gets called
