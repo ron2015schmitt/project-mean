@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { PageEvent } from "@angular/material/paginator";
 import { Subscription } from 'rxjs';
 import { AuthService } from "src/app/auth/auth.service";
 import { Post } from '../post.model';
@@ -15,6 +16,9 @@ export class PostListComponent implements OnInit {
   private postsSub: Subscription;
   private authStatusSub: Subscription;
   isLoading: boolean = false;
+  totalPosts = 10;
+  postsPerPage = 3;
+  pageSizeOptions = [5,10,20,50];
   userIsAuthenticated = false;
   userId: string;
 
@@ -50,6 +54,10 @@ export class PostListComponent implements OnInit {
 
   onDelete(id: string) {
     this.postsService.deletePost(id);
+  }
+
+  onChangedPage(event: PageEvent) {
+
   }
 }
 
