@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, ParamMap } from "@angular/router";
 
 import { PostsService } from "../posts.service";
-import { Post } from "../post.model";
+import { convertPostFromBackend, Post } from "../post.model";
 import { mimeType } from "./mime-type.validator";
 @Component({
   selector: 'app-post-create',
@@ -43,20 +43,15 @@ export class PostCreateComponent implements OnInit {
         this.postId = paramMap.get('postId');
         // subscribe to the service that will get the post from the backend
         this.isLoading = true;
-        this.postsService.getPost(this.postId).subscribe(postData => {
-          this.post = {
-            id: postData._id,
-            title: postData.title,
-            content: postData.content,
-            creator: postData.creator,
-            imagePath: postData.imagePath,
-          };
+        this.postsService.getPost(this.postId).subscribe(post => {
+          console.warn(post);
+          this.post = post;
           this.form.setValue({
-            title: this.post.title,
-            image: postData.imagePath,
-            content: this.post.content,
+            title: post.title,
+            image: post.imagePath,
+            content: post.content,
           });
-          this.imagePreview = postData.imagePath;
+          this.imagePreview = post.imagePath as String;
           this.isLoading = false;
         });
       } else {

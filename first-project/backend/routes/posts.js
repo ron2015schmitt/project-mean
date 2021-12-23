@@ -39,7 +39,7 @@ const storage = multer.diskStorage({
 router.post(
     "",
     checkAuth,
-    multer({ storage: storage }).single("image"),
+    multer({ storage: storage }).single("image"),  // grabs field named "image"
     (req, res, next) => {
         const url = req.protocol + "://" + req.get("host");
         const imagePath = url + "/images/" + req.file.filename;
@@ -67,7 +67,7 @@ router.post(
 // ':id' implies that id is sent in req.params not req.body
 router.put(
     '/:id',
-    multer({ storage: storage }).single("image"),
+    multer({ storage: storage }).single("image"), // grabs field named "image"
     checkAuth,
     (req, res, next) => {
         let imagePath = req.body.imagePath;
@@ -90,7 +90,7 @@ router.put(
             creator: req.userData.userId
         }, post).then(result => {
             console.log(`posts.js: put /api/posts/:id: updated post on MongoDb `, result);
-            if (result.modifiedCount) {
+            if (result.matchedCount) {
                 res.status(200).json({ message: 'Update Successful!', post });
             } else {
                 res.status(401).json({ message: 'User not authorized for modifying this post!' });
@@ -116,9 +116,14 @@ router.get('', (req, res, next) => {
 // get a post given by id
 // ':id' implies that id is sent in req.params not req.body
 router.get('/:id', (req, res, next) => {
+    console.log(`posts.js: get request received id=${req.params.id} route=${req.route.path}`);
     Post.findById(req.params.id).then(post => {
         if (post) {
-            res.status(200).json(post);
+            console.log(`posts.js: get from MongoDb `, post);
+            res.status(200).json({
+                message: 'Post fetched successfully!',
+                post,
+            });
         } else {
             res.status(404).json({
                 message: 'Post not found!',
