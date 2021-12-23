@@ -7,10 +7,10 @@
     "build:integrated": "ng build --configuration production-integrated",
     "build:separate": "ng build --configuration production-separate",
     "start:dev:fe": "ng serve",
-    "start:dev:server": "set NODE_ENV=development&& nodemon server.js",
-    "start:prod": "set NODE_ENV=production-integrated&& nodemon server.js",
+    "start:dev:server": "set NODE_ENV=development&& nodemon backend/server.js",
+    "start:prod": "set NODE_ENV=production-integrated&& nodemon backend/server.js",
     "start:prod:fe": "lite-server",
-    "start:prod:server": "set NODE_ENV=production-separate&& nodemon server.js",
+    "start:prod:server": "set NODE_ENV=production-separate&& nodemon backend/server.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
