@@ -79,6 +79,10 @@ if (config.INTEGRATE_ANGULAR) {
 }
 
 
+// for retrieivng images in the backend/images folder
+app.use("/images", express.static(path.join("backend/images")));
+
+
 // routes
 const postsRoutes = require('./routes/posts');
 app.use("/api/posts", postsRoutes);

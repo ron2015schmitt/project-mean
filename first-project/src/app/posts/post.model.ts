@@ -3,5 +3,5 @@ export interface Post {
   title: string,
   content: string,
   creator: string,
-  imagePath: File | string,
+  imagePath?: File | string,
 }

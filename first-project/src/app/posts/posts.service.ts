@@ -43,27 +43,26 @@ export class PostsService {
 
   getPost(id: string) {
     // return an observable that consumer can subscribe to   
-    return this.http.get<{ _id: string, title: string, content: string, creator: string, imagePath: string }>(environment.apiUrl + '/posts/' + id);
+    return this.http.get<{
+      _id: string,
+      title: string,
+      content: string,
+      creator: string,
+      imagePath: string
+    }>(environment.apiUrl + '/posts/' + id);
   }
 
   addPost(title: string, content: string, image: File) {
     const url = environment.apiUrl + '/posts';
-    const post = new FormData();
-    post.append("title", title);
-    post.append("content", content);
-    post.append("image", image, title);
-    console.warn(`addPost: post:`, post)
-    this.http.post<{ message: string, post: Post }>(url, post)
+    const postData = new FormData();
+    postData.append("title", title);
+    postData.append("content", content);
+    postData.append("image", image, title);
+    console.warn(`addPost: post:`, postData)
+    this.http.post<{ message: string, post: Post }>(url, postData)
       .subscribe((response) => {
         console.log(`add response received: `, response.message);
-        const post: Post = {
-          id: response.post.id,
-          title: title,
-          content: content,
-          creator: response.post.creator,
-          imagePath: response.post.imagePath,
-        };        
-        this.posts.push(post);
+        this.posts.push(response.post);
         // update all the listeners
         this.postsObserved.next([...this.posts]);
         // navigate back to homepage
@@ -71,6 +70,7 @@ export class PostsService {
       });
   }
 
+  // input may be a FIle (new image selected), or a string (same http file is used)
   updatePost(id: string, title: string, content: string, image: File | string) {
     const url = environment.apiUrl + '/posts/' + id;
     // to prevent hacking, we don't include creator here. backend will fill out
@@ -90,8 +90,8 @@ export class PostsService {
         imagePath: image,
       } as Post;
     }
-     console.warn(`updatePost: post:`, postData)
-     this.http.put<{ message: string, post: Post }>(url, postData)
+    console.warn(`updatePost: post:`, postData)
+    this.http.put<{ message: string, post: Post }>(url, postData)
       .subscribe((response) => {
         console.log(`put response received: `, response);
         const updatedPosts = [...this.posts];
@@ -101,7 +101,7 @@ export class PostsService {
           title: title,
           content: content,
           creator: response.post.creator,
-          imagePath: "",
+          imagePath: response.post.imagePath
         };
         updatedPosts[oldPostIndex] = post;
         this.posts = updatedPosts;
@@ -111,7 +111,7 @@ export class PostsService {
 
   }
 
-  
+
   deletePost(postId: string) {
     // delete from MongoDB
     console.log(`delete button pressed id=${postId} path=${environment.apiUrl + '/posts/' + postId}`);

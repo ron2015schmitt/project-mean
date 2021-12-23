@@ -11,29 +11,29 @@ const MIME_TYPE_MAP = {
     "image/png": "png",
     "image/jpeg": "jpg",
     "image/jpg": "jpg"
-  };
-  
-  const storage = multer.diskStorage({
+};
+
+const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      const isValid = MIME_TYPE_MAP[file.mimetype];
-      let error = new Error("Invalid mime type");
-      if (isValid) {
-        error = null;
-      }
-      cb(error, "backend/images");
+        const isValid = MIME_TYPE_MAP[file.mimetype];
+        let error = new Error("Invalid mime type");
+        if (isValid) {
+            error = null;
+        }
+        cb(error, "backend/images");
     },
     filename: (req, file, cb) => {
-      const name = file.originalname
-        .toLowerCase()
-        .split(" ")
-        .join("-");
-      const ext = MIME_TYPE_MAP[file.mimetype];
-      cb(null, name + "-" + Date.now() + "." + ext);
+        const name = file.originalname
+            .toLowerCase()
+            .split(" ")
+            .join("-");
+        const ext = MIME_TYPE_MAP[file.mimetype];
+        cb(null, name + "-" + Date.now() + "." + ext);
     }
-  });
-  
+});
 
-  
+
+
 
 // create a new post in the db
 router.post(
@@ -50,14 +50,14 @@ router.post(
             imagePath,
             creator: req.userData.userId,
         });
- 
+
         console.log(`posts.js: post request received route=${req.route.path}, post=`, post);
         console.log(req.body);
         post.save().then(result => {
+            post.id = result._id;
             res.status(201).json({
                 message: 'New post added successfully',
-                id: result._id,
-                ...post,
+                post,
             });
         });
     });
@@ -65,26 +65,38 @@ router.post(
 
 // update a post given by id
 // ':id' implies that id is sent in req.params not req.body
-router.put('/:id', checkAuth, (req, res, next) => {
-    const post = new Post({
-        _id: req.params.id,
-        title: req.body.title,
-        content: req.body.content,
-        creator: req.userData.userId,  // collect creator from userData, NOT body
+router.put(
+    '/:id',
+    multer({ storage: storage }).single("image"),
+    checkAuth,
+    (req, res, next) => {
+        let imagePath = req.body.imagePath;
+        if (req.file) {
+            // user submitted a new image file
+            const url = req.protocol + "://" + req.get("host");
+            imagePath = url + "/images/" + req.file.filename;
+        } 
+        console.log(`imagePath=${imagePath}`);
+        const post = new Post({
+            _id: req.params.id,
+            title: req.body.title,
+            content: req.body.content,
+            creator: req.userData.userId,  // collect creator from userData, NOT body
+            imagePath: imagePath,
+        });
+        console.log(`posts.js: put request received id=${req.params.id} route=${req.route.path}`, post);
+        Post.updateOne({
+            _id: req.params.id,
+            creator: req.userData.userId
+        }, post).then(result => {
+            console.log(`posts.js: put /api/posts/:id: updated post on MongoDb `, result);
+            if (result.modifiedCount) {
+                res.status(200).json({ message: 'Update Successful!', post });
+            } else {
+                res.status(401).json({ message: 'User not authorized for modifying this post!' });
+            }
+        })
     });
-    console.log(`posts.js: put request received id=${req.params.id} route=${req.route.path}`, post);
-    Post.updateOne({
-        _id: req.params.id,
-        creator: req.userData.userId
-    }, post).then(result => {
-        console.log(`posts.js: put /api/posts/:id: updated post on MongoDb `, result);
-        if (result.modifiedCount) {
-            res.status(200).json({ message: 'Update Successful!' });
-        } else {
-            res.status(401).json({ message: 'User not authorized for modifying this post!' });
-        }
-    })
-});
 
 // get the posts database
 router.get('', (req, res, next) => {

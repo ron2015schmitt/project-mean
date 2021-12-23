@@ -17,7 +17,7 @@ export class PostCreateComponent implements OnInit {
   post: Post;
   isLoading: boolean = false;
   form: FormGroup;
-  imagePreview: ArrayBuffer = null;
+  imagePreview: ArrayBuffer | String = null;
 
   constructor(public postsService: PostsService, public route: ActivatedRoute) {
 
@@ -25,15 +25,15 @@ export class PostCreateComponent implements OnInit {
 
   ngOnInit() {
     this.form = new FormGroup({
-      title: new FormControl(null, { 
-        validators: [Validators.required, Validators.minLength(3)], 
+      title: new FormControl(null, {
+        validators: [Validators.required, Validators.minLength(3)],
       }),
-      image: new FormControl(null, { 
-        validators: [Validators.required], 
+      image: new FormControl(null, {
+        validators: [Validators.required],
         asyncValidators: [mimeType],
       }),
-      content: new FormControl(null, { 
-        validators: [Validators.required], 
+      content: new FormControl(null, {
+        validators: [Validators.required],
       }),
     });
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
@@ -44,19 +44,19 @@ export class PostCreateComponent implements OnInit {
         // subscribe to the service that will get the post from the backend
         this.isLoading = true;
         this.postsService.getPost(this.postId).subscribe(postData => {
-          this.post = { 
-            id: postData._id, 
-            title: postData.title, 
+          this.post = {
+            id: postData._id,
+            title: postData.title,
             content: postData.content,
             creator: postData.creator,
-            // image: postData.image,
-            imagePath: null,
-           };
-           this.form.setValue({
+            imagePath: postData.imagePath,
+          };
+          this.form.setValue({
             title: this.post.title,
-            image: null,
+            image: postData.imagePath,
             content: this.post.content,
-           });
+          });
+          this.imagePreview = postData.imagePath;
           this.isLoading = false;
         });
       } else {
@@ -92,7 +92,7 @@ export class PostCreateComponent implements OnInit {
     this.form.get('image').updateValueAndValidity();
     const reader = new FileReader();
     reader.onload = () => {
-      this.imagePreview = <ArrayBuffer> reader.result;
+      this.imagePreview = <ArrayBuffer>reader.result;
     };
     reader.readAsDataURL(file);
   }
