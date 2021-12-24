@@ -19,7 +19,7 @@ export class PostListComponent implements OnInit {
   postsPerPage = 5;
   currentPage = 1;
   totalPosts = 100;
-  pageSizeOptions = [1,2,5,10,20,50];
+  pageSizeOptions = [1, 2, 5, 10, 20, 50];
   userIsAuthenticated = false;
   userId: string;
 
@@ -55,9 +55,13 @@ export class PostListComponent implements OnInit {
   }
 
   onDelete(id: string) {
-    this.postsService.deletePost(id).subscribe(() => {
-      this.getPosts();
-    });
+    this.postsService
+      .deletePost(id)
+      .subscribe(() => {
+        this.getPosts();
+      }, error => {
+        this.isLoading = false;
+      });
   }
 
   onChangedPage(event: PageEvent) {
@@ -68,7 +72,7 @@ export class PostListComponent implements OnInit {
   }
 
   getPosts() {
-    this.postsService.getPosts(this.postsPerPage,  this.currentPage)
+    this.postsService.getPosts(this.postsPerPage, this.currentPage)
   }
 }
 

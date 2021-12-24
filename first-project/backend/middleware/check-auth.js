@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
         next();
     } catch (error) {
         return res.status(401).json({
-            message: "check-auth.js: Auth failed during token verification",
+            message: "check-auth.js: Authorization failed during token verification.",
         });
     }
 };

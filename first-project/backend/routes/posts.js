@@ -59,6 +59,10 @@ router.post(
                 message: 'New post added successfully',
                 post,
             });
+        }).catch(err => {
+            res.status(500).json({
+                error: err,
+            });
         });
     });
 
@@ -95,7 +99,11 @@ router.put(
             } else {
                 res.status(401).json({ message: 'User not authorized for modifying this post!' });
             }
-        })
+        }).catch(err => {
+            res.status(500).json({
+                error: err,
+            });
+        });
     });
 
 // get the posts database
@@ -127,6 +135,10 @@ router.get('', (req, res, next) => {
             posts,
             count,
         });
+    }).catch(err => {
+        res.status(500).json({
+            error: err,
+        });
     });
 });
 
@@ -146,6 +158,10 @@ router.get('/:id', (req, res, next) => {
                 message: 'Post not found!',
             });
         }
+    }).catch(err => {
+        res.status(500).json({
+            error: err,
+        });
     });
 });
 
@@ -163,6 +179,10 @@ router.delete("/:id", checkAuth, (req, res, next) => {
         } else {
             res.status(401).json({ message: 'User not authorized to delete this post!' });
         }
+    }).catch(err => {
+        res.status(500).json({
+            error: err,
+        });
     });
 });
 

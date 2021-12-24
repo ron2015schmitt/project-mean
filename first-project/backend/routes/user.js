@@ -39,7 +39,7 @@ router.post('/login', (req, res, next) => {
         if (!usr) {
             console.log(`user.js: login request user not found`, usr);
             return res.status(401).json({
-                message: "Auth failed",
+                message: "Login failed: user not found",
             });
         }
         user = usr;
@@ -50,7 +50,7 @@ router.post('/login', (req, res, next) => {
         if (!result) {
             console.log(`user.js: user password is incorrect`,result);
             res.status(401).json({
-                message: "Auth failed",
+                message: "Login failed: password is incorrect",
             });
         }
         console.log(`user.js: login succeeded:`, result);
@@ -68,7 +68,7 @@ router.post('/login', (req, res, next) => {
     }).catch(err => {
         console.log(`user.js: user login failed`, err);
         res.status(401).json({
-            message: "Auth failed",
+            message: "Login failed",
         });
     });
 });
