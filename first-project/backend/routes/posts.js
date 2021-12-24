@@ -113,14 +113,19 @@ router.get('', (req, res, next) => {
             .limit(pageSize);
     }
     // retrieve exisiting posts from MongoDB
+    let posts;
     postQuery.then(documents => {
         // the data items in MongoDB are called documents
         console.log(documents);
+        posts = documents;
+        return Post.count();
+    }).then(count => {
         // retrieve is asynchronous, so we can't process until the callback gets called
         // send status, then send posts as a JSON message!
         res.status(200).json({
             message: 'Posts fetched successfully!',
-            posts: documents,
+            posts,
+            count,
         });
     });
 });

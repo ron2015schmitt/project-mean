@@ -35,8 +35,9 @@ export class PostListComponent implements OnInit {
 
     // subscribe to PostsService and on each update, we set our array from PostsService's copy
     this.postsSub = this.postsService.getPostUpdatedListener()
-      .subscribe((posts: Post[]) => {
-        this.posts = posts;
+      .subscribe((data: { posts: Post[], count: number }) => {
+        this.posts = data.posts;
+        this.totalPosts = data.count;
         this.isLoading = false;
       });
     this.userIsAuthenticated = this.authService.getIsAuth();
@@ -54,13 +55,20 @@ export class PostListComponent implements OnInit {
   }
 
   onDelete(id: string) {
-    this.postsService.deletePost(id);
+    this.postsService.deletePost(id).subscribe(() => {
+      this.getPosts();
+    });
   }
 
   onChangedPage(event: PageEvent) {
+    this.isLoading = true;
     this.currentPage = event.pageIndex + 1;
     this.postsPerPage = event.pageSize;
-    this.postsService.getPosts(this.postsPerPage,  this.currentPage);
+    this.getPosts();
+  }
+
+  getPosts() {
+    this.postsService.getPosts(this.postsPerPage,  this.currentPage)
   }
 }
 

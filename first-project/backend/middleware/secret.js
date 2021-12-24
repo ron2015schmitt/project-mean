@@ -1,1 +1,1 @@
-module.exports = '2#(@hGwIW&1GH30PQ;dmWQOsa203';
+module.exports = require('crypto').randomBytes(256).toString('base64');

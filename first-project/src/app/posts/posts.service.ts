@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 @Injectable({ providedIn: 'root' })
 export class PostsService {
   private posts: Post[] = [];
-  private postsObserved = new Subject<Post[]>();
+  private postsObserved = new Subject<{ posts: Post[], count: number }>();
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -18,16 +18,22 @@ export class PostsService {
     // get posts from back-end using http request!
     const url = `${environment.apiUrl}/posts?pagesize=${postsPerPage}&page=${currentPage}`;
     console.log(`send get message to : `, url);
-    return this.http.get<{ message: string, posts: PostBE[] }>(url)
+    return this.http.get<{ message: string, posts: PostBE[], count: number }>(url)
       .pipe(
         map(response => {
-          return response.posts.map(postBE => convertPostFromBackend(postBE));
+          return {
+            posts: response.posts.map(postBE => convertPostFromBackend(postBE)),
+            count: response.count,
+          };
         })
-      ).subscribe((posts) => {
-        // console.log(`get response received: `, posts);
-        this.posts = posts;
+      ).subscribe((data) => {
+        console.log(`get response received: `, data);
+        this.posts = data.posts;
         // update all the listeners
-        this.postsObserved.next([...this.posts]);
+        this.postsObserved.next({
+          posts: [...this.posts],
+          count: data.count,
+        });
       });
   }
   getPostUpdatedListener() {
@@ -38,12 +44,12 @@ export class PostsService {
     // return an observable that consumer can subscribe to   
     const url = `${environment.apiUrl}/posts/${id}`;
     return this.http.get<{ message: string, post: PostBE }>(url)
-    .pipe(
-      map(response => {
-        console.warn(`getPost:`, response);
-        return convertPostFromBackend(response.post);
-      })
-    );
+      .pipe(
+        map(response => {
+          console.warn(`getPost:`, response);
+          return convertPostFromBackend(response.post);
+        })
+      );
   }
 
   addPost(title: string, content: string, image: File) {
@@ -58,11 +64,6 @@ export class PostsService {
     return this.http.post<{ message: string, post: PostBE }>(url, postData)
       .subscribe((response) => {
         console.log(`add response received: `, response.message);
-        let post = convertPostFromBackend(response.post);
-        this.posts.push(post);
-        // update all the listeners
-        this.postsObserved.next([...this.posts]);
-        // navigate back to homepage
         this.router.navigate(["/"]);
       });
   }
@@ -91,12 +92,6 @@ export class PostsService {
     this.http.put<{ message: string, post: PostBE }>(url, postData)
       .subscribe((response) => {
         console.log(`put response received: `, response);
-        const updatedPosts = [...this.posts];
-        const oldPostIndex = updatedPosts.findIndex(p => p.id === id);
-        let post = convertPostFromBackend(response.post);
-        updatedPosts[oldPostIndex] = post;
-        this.posts = updatedPosts;
-        this.postsObserved.next([...this.posts]);
         this.router.navigate(["/"]);
       });
 
@@ -107,13 +102,7 @@ export class PostsService {
     // delete from MongoDB
     const url = environment.apiUrl + '/posts/' + id;
     console.log(`delete button pressed id=${id} path=${environment.apiUrl + '/posts/' + id}`);
-    this.http.delete(url)
-      .subscribe(() => {
-        // delete from our local copy
-        this.posts = this.posts.filter(post => post.id !== id);
-        // update all listeners
-        this.postsObserved.next([...this.posts]);
-      });
+    return this.http.delete(url);
   }
 
 }

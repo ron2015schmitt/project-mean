@@ -12,6 +12,9 @@
 #ignore angular output files in integrated build
 /backend/angular/
 
+# ignore image files
+backend/images
+
 #ninja tool
 .ninja_log
 
