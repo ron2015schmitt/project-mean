@@ -15,6 +15,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { SignupComponent } from './auth/signup/signup.component';
 
 import { AppRoutingModule } from './app-routing.module';
+import { AuthModule } from './auth/auth.module';
 import { PostsModule } from './posts/posts.module';
 
 import { AuthInterceptor } from './auth/auth-interceptor';
@@ -26,8 +27,6 @@ import { ErrorInterceptor } from './posts/error-interceptor';
     AppComponent,
     ErrorComponent,
     HeaderComponent,
-    LoginComponent,
-    SignupComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -38,6 +37,8 @@ import { ErrorInterceptor } from './posts/error-interceptor';
     FormsModule,
     HttpClientModule,
     MatDesignModule,
+
+    AuthModule,
     PostsModule,
   ],
   providers: [ 
