@@ -1,62 +1,47 @@
-import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { MatInputModule } from '@angular/material/input';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import {MatPaginatorModule} from '@angular/material/paginator';
+import { MatDesignModule } from './mat-design.module';
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 
-import { HeaderComponent } from './header/header.component';
+
 import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+import { AuthInterceptor } from './auth/auth-interceptor';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ErrorComponent } from './error/error/error.component';
+import { ErrorInterceptor } from './posts/error-interceptor';
+import { LoginComponent } from './auth/login/login.component';
+import { HeaderComponent } from './header/header.component';
 import { PostCreateComponent } from './posts/post-create/post-create.component';
 import { PostListComponent } from './posts/post-list/post-list.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AppRoutingModule } from './app-routing.module';
-import { LoginComponent } from './auth/login/login.component';
 import { SignupComponent } from './auth/signup/signup.component';
-import { AuthInterceptor } from './auth/auth-interceptor';
-import { ErrorInterceptor } from './posts/error-interceptor';
-import { ErrorComponent } from './error/error/error.component';
 
 @NgModule({
   declarations: [
-    HeaderComponent,
     AppComponent,
+    ErrorComponent,
+    HeaderComponent,
+    LoginComponent,
     PostCreateComponent,
     PostListComponent,
-    LoginComponent,
     SignupComponent,
-    ErrorComponent
   ],
   imports: [
-    BrowserModule,
     AppRoutingModule,
-    FormsModule,
     BrowserAnimationsModule,
-    MatInputModule,
-    MatCardModule,
-    MatButtonModule,
-    MatDividerModule,
-    MatToolbarModule,
-    MatExpansionModule,
-    MatProgressSpinnerModule,
-    MatDialogModule,
+    BrowserModule,
+    FormsModule,
     HttpClientModule,
-    ReactiveFormsModule,
-    MatPaginatorModule,
-    
+    MatDesignModule,
+    ReactiveFormsModule,    
   ],
   providers: [ 
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [ AppComponent ],
   entryComponents: [ ErrorComponent ],
 })
 export class AppModule { }
