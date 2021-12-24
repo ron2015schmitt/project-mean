@@ -16,9 +16,10 @@ export class PostListComponent implements OnInit {
   private postsSub: Subscription;
   private authStatusSub: Subscription;
   isLoading: boolean = false;
-  totalPosts = 10;
-  postsPerPage = 3;
-  pageSizeOptions = [5,10,20,50];
+  postsPerPage = 5;
+  currentPage = 1;
+  totalPosts = 100;
+  pageSizeOptions = [1,2,5,10,20,50];
   userIsAuthenticated = false;
   userId: string;
 
@@ -30,7 +31,7 @@ export class PostListComponent implements OnInit {
   ngOnInit() {
     // get the posts from the back-end
     this.isLoading = true;
-    this.postsService.getPosts();
+    this.postsService.getPosts(this.postsPerPage, this.currentPage);
 
     // subscribe to PostsService and on each update, we set our array from PostsService's copy
     this.postsSub = this.postsService.getPostUpdatedListener()
@@ -57,7 +58,9 @@ export class PostListComponent implements OnInit {
   }
 
   onChangedPage(event: PageEvent) {
-
+    this.currentPage = event.pageIndex + 1;
+    this.postsPerPage = event.pageSize;
+    this.postsService.getPosts(this.postsPerPage,  this.currentPage);
   }
 }
 

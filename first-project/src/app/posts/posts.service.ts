@@ -14,9 +14,9 @@ export class PostsService {
   constructor(private http: HttpClient, private router: Router) { }
 
 
-  getPosts() {
+  getPosts(postsPerPage: number, currentPage: number) {
     // get posts from back-end using http request!
-    const url = environment.apiUrl + '/posts';
+    const url = `${environment.apiUrl}/posts?pagesize=${postsPerPage}&page=${currentPage}`;
     console.log(`send get message to : `, url);
     return this.http.get<{ message: string, posts: PostBE[] }>(url)
       .pipe(
