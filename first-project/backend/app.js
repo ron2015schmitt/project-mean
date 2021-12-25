@@ -42,18 +42,10 @@ const express = require('express');
 const app = express();
 
 const bodyParser = require('body-parser');
-const { exit } = require('process');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-if (config.INTEGRATE_ANGULAR) {
-  // we need to serve up angular (URL with out any suffix)
-  const angDir = path.join("dist/integrated");
-  console.log(`config.js: serving Angular from ${angDir}`);
-  app.use('/', express.static(angDir));
-  app.set('view engine', 'pug');
-}
 
 // give permissions for the front-end to access
 app.use((req, res, next) => {
@@ -71,8 +63,13 @@ app.use((req, res, next) => {
 });
 
 if (config.INTEGRATE_ANGULAR) {
-  app.use('/api/posts', (req, res, next) => {
-      const angIndex = path.join(__dirname, "angular", "index.html");
+  // we need to serve up angular (URL with out any suffix)
+  const angDir = path.join("dist/integrated");
+  console.log(`config.js: serving Angular from ${angDir}`);
+  app.use('/', express.static(angDir));
+  app.set('view engine', 'pug');
+  app.get('.*', (req, res, next) => {
+      const angIndex = path.join(__dirname, "../dist/integrated", "index.html");
       console.log(`config.js: sending Angular FE: ${angIndex}`);
       res.sendFile(angIndex);
   });

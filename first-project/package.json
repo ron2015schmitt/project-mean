@@ -2,16 +2,17 @@
   "name": "project-mean",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
-    "build:dev": "ng build --configuration development",
-    "build:integrated": "ng build --configuration production-integrated",
-    "build:separate": "ng build --configuration production-separate",
     "start:dev:fe": "ng serve",
     "start:dev:server": "set NODE_ENV=development&& nodemon backend/server.js",
-    "start:prod": "set NODE_ENV=production-integrated&& nodemon backend/server.js",
+
+    "build:integrated": "ng build --configuration production-integrated",
+    "build:separate": "ng build --configuration production-separate",
+    "watch:integrated": "ng build --watch --configuration production-integrated",
+    "watch:separate": "ng build --watch --configuration production-separate",
+    "start:prod:integrated": "set NODE_ENV=production-integrated&& nodemon backend/server.js",
     "start:prod:fe": "lite-server",
     "start:prod:server": "set NODE_ENV=production-separate&& nodemon backend/server.js",
-    "watch": "ng build --watch --configuration development",
+
     "test": "ng test"
   },
   "private": true,
