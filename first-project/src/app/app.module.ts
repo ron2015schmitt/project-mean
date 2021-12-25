@@ -11,11 +11,8 @@ import { MatDesignModule } from './mat-design.module';
 import { AppComponent } from './app.component';
 import { ErrorComponent } from './error/error/error.component';
 import { HeaderComponent } from './header/header.component';
-import { LoginComponent } from './auth/login/login.component';
-import { SignupComponent } from './auth/signup/signup.component';
 
 import { AppRoutingModule } from './app-routing.module';
-import { AuthModule } from './auth/auth.module';
 import { PostsModule } from './posts/posts.module';
 
 import { AuthInterceptor } from './auth/auth-interceptor';
@@ -38,7 +35,6 @@ import { ErrorInterceptor } from './posts/error-interceptor';
     HttpClientModule,
     MatDesignModule,
 
-    AuthModule,
     PostsModule,
   ],
   providers: [ 
